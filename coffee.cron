@@ -1,0 +1,27 @@
+while true    
+do
+   ATIME=`stat -c %Z kahve/*.coffee`
+
+   if [[ "$ATIME" != "$LTIME" ]]
+   then    
+       cat kahve/*.coffee | coffee --compile --stdio > dist/DS.js
+       LTIME=$ATIME
+   fi
+   sleep 2
+done
+
+
+
+while true    
+do
+   ATIME=`stat -c %Z kahve/*.coffee`
+   BTIME=`stat -c %Z spec/*spec.js`
+
+   if [[ "$ATIME" != "$LTIME" ]]
+   then    
+       grunt
+       LTIME=$ATIME
+   fi
+   
+   
+done
