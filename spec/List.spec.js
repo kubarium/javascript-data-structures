@@ -166,13 +166,13 @@ describe("Javascript Data Structure Suite", function() {
       expect(list.toString()).toBe([4, 3, 2, 5].toString());
     });
 
-    it("for a list of (4,3,5) insert(2,2) should insert 2 after 5", function() {
+    it("for a list of (4,3,5) insert(6,2) should insert 6 before 5", function() {
       list.append(4);
       list.append(3);
       list.append(5);
 
-      list.insert(2, 2);
-      expect(list.toString()).toBe([4, 3, 2, 5].toString());
+      list.insert(6, 2);
+      expect(list.toString()).toBe([4, 3, 6, 5].toString());
     });
 
     it("for a list of (4,3,5) insert(2,-2) or insert(2,4) should not insert anything", function() {
@@ -218,16 +218,18 @@ describe("Javascript Data Structure Suite", function() {
       expect(list.getItem()).toBe(3);
       list.next();
       expect(list.getItem()).toBe(5);
+
     });
 
-    it("for a list of (4,3,5) and currentPosition = 2 using next() should not move the cursor", function() {
+    it("for a list of (4,3,5) and currentPosition = 2 using next() should move the cursor to 3 and isLast should be true", function() {
       list.append(4);
       list.append(3);
       list.append(5);
 
       list.moveTo(2);
       list.next();
-      expect(list.currentPosition).toBe(2);
+      expect(list.currentPosition).toBe(3);
+      expect(list.isLast()).toBe(true);
     });
 
     it("for a list of (4,3,5) and currentPosition = 2 using previous() should move the cursor to position 1", function() {
@@ -262,7 +264,42 @@ describe("Javascript Data Structure Suite", function() {
       list.previous();
       expect(list.currentPosition).toBe(0);
     });
+    
+    it("for a list of (4,3,5) calling next() more than three times should move the currentPosition to 3 and stop it there", function() {
+      list.append(4);
+      list.append(3);
+      list.append(5);
+      
+      list.next();
+      list.next();
+      list.next();
+      list.next();
+      list.next();
 
+      expect(list.currentPosition).toBe(3);
+      expect(list.isLast()).toBe(true);
+    });
+    
+    it("for a list of (4,3,5) and isLast true (currentPosition=3) calling previous() and getItem() consecutively should result in 5,3,4 while setting currentPosition to 0 at the end", function() {
+      list.append(4);
+      list.append(3);
+      list.append(5);
+      
+      list.currentPosition = 3;
+      
+      list.previous();
+      expect(list.getElement()).toBe(5);
+      
+      list.previous();
+      expect(list.getElement()).toBe(3);
+      
+      list.previous();
+      expect(list.getElement()).toBe(4);
+      
+      expect(list.hasPrevious()).toBe(false);
+      
+      expect(list.isLast()).toBe(false);
+    });
   });
 
   describe("Iteration", function() {
@@ -275,35 +312,23 @@ describe("Javascript Data Structure Suite", function() {
       names.append('Bryan');
       names.append('Danny');
     });
-    
-    it("for a list of (a,b,c) calling next() more than two times should move the currentPosition to 2 and stop it there",function() {
-      list.append('a');
-      list.append('b');
-      list.append('c');
-      
-      list.next();
-      list.next();
-      list.next();
-      list.next();
-      list.next();
-      
-      expect(list.currentPosition).toBe(2);
-    });
+
+
 
     it("iterating over the names list should resut in 'ClaytonRaymondCynthiaJenniferBryanDanny'", function() {
 
       var foo = function() {
-        
+
         var output = "";
 
-        while(names.hasNext()) {
+        while (names.hasNext()) {
           output += names.getElement();
           names.next();
         }
-        
+
         return output
       };
-      
+
       expect(foo()).toBe('ClaytonRaymondCynthiaJenniferBryanDanny');
     });
   });

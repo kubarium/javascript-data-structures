@@ -10,7 +10,8 @@ class window.DS.List
         @items=[]
         @currentPosition=0
     getItem:() ->
-        @items[@currentPosition]
+        if !@isLast()
+            @items[@currentPosition]
     getElement:@::getItem
     find:(item) ->
         
@@ -30,25 +31,27 @@ class window.DS.List
         @items.push(item)
         
     insert:(item, index) ->
-        if @length - 1 >= index || index < 0
+        if @length() <= index || index < 0
             return
         @items.splice(index || @currentPosition, 0, item)
     
     hasNext:() ->
-        @currentPosition + 1 < @items.length
+        @currentPosition != @length()
     hasPrevious:() ->
         @currentPosition > 0
     next:() ->
-        if(@hasNext())
+        if @hasNext()
             ++@currentPosition
     previous:() ->
-        if(@hasPrevious())
+        if @hasPrevious()
             --@currentPosition
+    isLast:() ->
+        @currentPosition == @length()
     length:() ->
         @items.length
     size:@::length
     clear:() ->
-        @items.splice(0, @items.length)
+        @items.splice(0, @length())
         @currentPosition = 0 
         return null
     empty:@::clear
@@ -62,12 +65,12 @@ class window.DS.List
         @front()
         @getItem()
     end:() ->
-        @moveTo(@items.length-1)
+        @moveTo(@length()-1)
     last:() ->
         @end()
         @getItem()
     isEmpty:() ->
-        @items.length == 0
+        @length() == 0
     toString:() ->
         @items.toString()
 class window.DS.Queue

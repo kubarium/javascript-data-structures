@@ -14,7 +14,9 @@
     }
 
     List.prototype.getItem = function() {
-      return this.items[this.currentPosition];
+      if (!this.isLast()) {
+        return this.items[this.currentPosition];
+      }
     };
 
     List.prototype.getElement = List.prototype.getItem;
@@ -53,14 +55,14 @@
     };
 
     List.prototype.insert = function(item, index) {
-      if (this.length - 1 >= index || index < 0) {
+      if (this.length() <= index || index < 0) {
         return;
       }
       return this.items.splice(index || this.currentPosition, 0, item);
     };
 
     List.prototype.hasNext = function() {
-      return this.currentPosition + 1 < this.items.length;
+      return this.currentPosition !== this.length();
     };
 
     List.prototype.hasPrevious = function() {
@@ -79,6 +81,10 @@
       }
     };
 
+    List.prototype.isLast = function() {
+      return this.currentPosition === this.length();
+    };
+
     List.prototype.length = function() {
       return this.items.length;
     };
@@ -86,7 +92,7 @@
     List.prototype.size = List.prototype.length;
 
     List.prototype.clear = function() {
-      this.items.splice(0, this.items.length);
+      this.items.splice(0, this.length());
       this.currentPosition = 0;
       return null;
     };
@@ -111,7 +117,7 @@
     };
 
     List.prototype.end = function() {
-      return this.moveTo(this.items.length - 1);
+      return this.moveTo(this.length() - 1);
     };
 
     List.prototype.last = function() {
@@ -120,7 +126,7 @@
     };
 
     List.prototype.isEmpty = function() {
-      return this.items.length === 0;
+      return this.length() === 0;
     };
 
     List.prototype.toString = function() {
